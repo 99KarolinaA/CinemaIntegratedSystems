@@ -1,0 +1,85 @@
+﻿@model List<Cinema.Domain.DomainModels.Ticket>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Cinema.Domain.CinemaUser> SignInManager
+@inject UserManager<Cinema.Domain.CinemaUser> UserManager
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="m-0">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a class="btn btn-success" asp-controller="Tickets" asp-action="Create">Add new Ticket</a>
+
+        }
+        </div>
+
+    <form asp-action="Index" asp-controller="Tickets">
+        <div class="form-group">
+            <label class="control-label">Choose date:</label>
+            <input type="date" name="dateTicket" id="dateTicket" class="form-control" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Choose date" class="btn btn-info" />
+        </div>
+    </form>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @if (User.IsInRole("Administrator"))
+        {
+            <form asp-action="ExportAllTickets" asp-controller="Tickets" method="get">
+                <div class="form-group">
+                    <select asp-items="ViewBag.genres" name="genre" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Export tickets by category" class="btn btn-info" />
+                </div>
+            </form>
+
+            <div class="m-0">
+                <a class="btn btn-outline-success" asp-controller="Tickets" asp-action="ExportAllTickets">Export All Tickets</a>
+            </div>
+        }
+    }
+
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        var item = Model[i];
+
+        if (i % 3 == 0)
+        {
+            @:<div class="row">
+            }
+
+
+            <div class="col-md-3 m-4">
+                <div class="card" style="width: 22rem; height: 15rem;">
+
+
+                    <div class="card-body">
+                        <h3 class="card-title">Ticket for Movie @item.Movie.Title</h3>
+                        <h6>Price: @item.Price</h6>
+                        <h6>Genre: @item.Movie.Genre.ToString()</h6>
+                        <h6>Date: @item.Date.ToString()</h6>
+                    </div>
+
+                    <div class="card-footer">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <a asp-controller="Tickets" asp-action="AddToShoppingCart" asp-route-id="@item.Id" class="btn btn-info">Add to Card</a>
+                        }
+                        </div>
+                </div>
+            </div>
+
+
+
+            if (i % 3 == 2)
+            {
+            @:</div>
+        }
+    }
+
+</div>

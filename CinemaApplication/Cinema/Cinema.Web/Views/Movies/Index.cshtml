@@ -1,0 +1,55 @@
+﻿@model List<Cinema.Domain.DomainModels.Movie>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Cinema.Domain.CinemaUser> SignInManager
+@inject UserManager<Cinema.Domain.CinemaUser> UserManager
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="m-0">
+        <a class="btn btn-info" asp-controller="Movies" asp-action="Create">Add new Movie</a>
+    </div>
+
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        var item = Model[i];
+
+        if (i % 3 == 0)
+        {
+            @:<div class="row">
+            }
+
+
+            <div class="col-md-3 m-4">
+                <div class="card text-white bg-info mb-3" style="width: 18rem; height: 40rem;">
+                    <img class="card-img-top" src="@item.Image" style="height: 50%" alt="Image for movie!" />
+                    <div class="card-body">
+                        <h3 class="card-title">@item.Title</h3>
+                        <h6>Genre: @item.Genre.ToString()</h6>
+                        <h6>Length: @item.Length</h6>
+                        <a asp-controller="Tickets" asp-action="Create" asp-route-movieId="@item.Id" class="btn btn-light">Add Ticket for this Movie</a>
+         
+                        <a asp-controller="Tickets" asp-action="TicketsForMovie" asp-route-movieId="@item.Id" class="btn btn-light mt-2">All Tickets for this Movie</a>
+                    </div>
+
+                    <div class="card-footer">
+                        <a asp-controller="Movies" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-light">Edit Movie</a>
+                        <a asp-controller="Movies" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-light">Delete Movie</a>
+                        <a asp-controller="Movies" asp-action="Details" asp-route-id="@item.Id" class="btn btn-light mt-2">Details for Movie</a>
+                      
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            if (i % 3 == 2)
+            {
+            @:</div>
+        }
+    }
+
+</div>
